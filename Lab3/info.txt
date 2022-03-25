@@ -1,0 +1,16 @@
+To check all models (only for boolean):
+    (set-option:produce-models true) ;at the beggining
+    (check-allsat (VARIABLES_LIST)) ;at the end
+
+all 4 variables need to be different (Int or Real):
+    (assert (distinct A B C D))
+
+
+
+function definition:
+    (define-fun NAME ((INPUT1 TYPE1) (INPUT2 TYPE2)) OUTPUT_TYPE (BODY FUNCTION))
+
+example function definition: 
+    (define-fun max ((a Int) (b Int)) Int (ite (>= a b) a b))
+example function usage:
+    (assert (= E (max A (max B (max C D)))))   ->E is the maximum value between A B C D

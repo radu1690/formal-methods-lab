@@ -1,0 +1,7 @@
+c x1 <-> x2
+c = (x1 -> x2) and (x2 -> x1)
+c = (-x1 or x2) and (-x2 or x1)
+
+p cnf 2 2 
+-1 2 0
+-2 1 0

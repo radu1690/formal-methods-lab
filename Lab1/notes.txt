@@ -1,0 +1,29 @@
+DIMACS FORMAT:
+    - comments start with c:
+        c this is a comment
+    - the first non comment line must start with a lower case p (which means problem)
+    - followed by the problem type (in our case cnf)
+    - the first number is the number of variables
+    - second is the number of clauses
+
+mathsat <file> -input=dimacs
+    => sat / unsat
+mathsat <file> -input=dimacs -model   
+    => sat / unsat + model
+
+
+
+smtlib to feed non-cnf formulas to mathsat (https://smtlib.cs.uiowa.edu/)
+
+A SMT-LIB file has 4 sections:
+    - Option section
+    - Declaration section
+    - Assertion section
+    - Action section
+
+mathsat <file.smt2> 
+mathsat <file.smt2> -model
+
+list for all options: mathsat -help
+
+3 exercises for homework (3rd one is difficult)

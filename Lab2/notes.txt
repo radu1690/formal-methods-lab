@@ -1,0 +1,37 @@
+To check if a solution is unique:
+    - negate the found model
+        - if it returns unsat -> the solution is unique
+        - if it returns sat or another model -> the solution is not unique
+
+Python and Pysmt:
+from pysmt.shortcuts import *   -> import
+msat = Solver(name="msat")  -> solver to use
+
+To create many variables, it's easier tpo create dictionaries (key-value pairs) with for cycles
+
+Ex: dict = {}
+    for i in range(1,10) #(i from 1 to 9):
+        for j in "abcd":
+            dict["d{}{}".format(i,j)] = Symbol("d{}{}".format(i,j), BOOL)
+    //dict["1a"] = ("1a", BOOL)   //variable 1a of type BOOL
+    //same for all other keys generated from for cycle: d1b,d1c,d1d,d2a,d2b,d2c,d2d,d3a....
+
+msat.add_assertion(Not(variable))
+msat.add_assertion(And(v1,v2,...))
+msat.add_assertion(Or(v1,v2,...))
+msat.add_assertion(ExactlyOne(v1,v2,...))
+msat.add_assertion(AtMostOne(v1,v2,...))
+
+msat.solve()  -> True = SAT, False = UNSAT
+msat.get_model() -> enumerates all the variables with their values
+NB: each variable is an array of 2 elements: first element is the name, second is the value
+    NB: to get the name:
+            var[0].symbol_name
+        to check if the value is true/false:
+            if var[1] == Bool(True) //nb Bool(True) is very IMPORTANT!
+            if var[2] == Bool(False)
+    ex: model = {}
+        for element in msat.get_model():
+        model[element[0].symbol_name()] = element[1]
+
+lista = list()  -> create a list
