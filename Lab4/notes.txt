@@ -1,0 +1,17 @@
+Bit-Vectors:
+    - use number x as a bit vector of n bits:
+        (_ bvx n)           does not work for negative numbers
+            or
+        ((_ to_bv n) x)     works also with negative numbers
+
+    - declaration: (x as a bitvector of n bits)
+        (declare-const x (_ BitVec n))
+    - for the following operations, var1 and var2 are expressed as above:
+        ADDITION: bvadd var1 var2
+        SUBSTRACTION: bvsub var1 var2
+        MULTIPLICATION: bvmul var1 var2
+        DIVISION: bvudiv var1 var2   (put bvsdiv for signed)
+        REMAINDER: bvurem var1 var2  (put bvsrem for signed)
+        BITWISE OR: bvor var1 var2
+        BITWISE AND: bvand var1 var2
+        BITWISE XOR: bvxor var1 var2

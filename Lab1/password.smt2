@@ -21,8 +21,8 @@
 (declare-const X43 Bool)
 
 ; The password should be even
-(assert (and (not X43) (not X23)))
-;(assert (or X13 X33))
+(assert (and (not X13) (not X33)))
+;(assert (or X23 X43))
 
 ; We cannot use the same digit three times, otherwise it would be easy to guess it.
 (assert (not (and X11 X12 X13)))
@@ -64,43 +64,9 @@
 
 
 
-; 431
-(assert (not (and X41 X32 X13)))
-; 243
-(assert (not (and X21 X42 X33)))
-; 421
-(assert (not (and X41 X22 X13)))
-; 241
-(assert (not (and X21 X42 X13)))
-; 141
-(assert (not (and X11 X42 X13)))
-; 341
-(assert (not (and X31 X42 X13)))
-; 231
-(assert (not (and X21 X32 X13)))
-; 131
-(assert (not (and X11 X32 X13)))
-; 121
-(assert (not (and X11 X22 X13)))
-; 321
-(assert (not (and X31 X22 X13)))
-; 123
-(assert (not (and X11 X22 X33)))
-; 323
-(assert (not (and X31 X22 X33)))
-; 343
-(assert (not (and X31 X42 X33)))
-; 143
-(assert (not (and X11 X42 X33)))
-; 423
-(assert (not (and X41 X22 X33)))
-; 413
-(assert (not (and X41 X12 X33)))
-; 213
-(assert (not (and X21 X12 X33)))
-; 313
-(assert (not (and X31 X12 X33)))
-
+; 312
+(assert (not (and X31 X12 X23)))
+; not unique
 
 
 (check-sat)
