@@ -9,6 +9,18 @@ Exercises and homeworks for the Formal Methods lab (2022) at the University of T
 
 # Lab2
 * Pysmt
+* Incremental SAT
+* UNSAT cores
 
 # Lab3
 * Mathsat (Bool, Int, Real)
+* Interpreted functions
+* AllSAT
+
+# Lab4
+* BitVectors
+* Arrays
+* Uninterpreted functions
+
+# Lab5
+* OptiMathSat

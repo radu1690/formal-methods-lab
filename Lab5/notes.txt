@@ -1,0 +1,17 @@
+lexicographic optimization -> optimization on more than one variable (with order)
+
+optimathsat file.smt2 -optimization=true -model_generation=true
+
+file template:
+    define which expression to maximize/minimize:
+    (maximize (expression))
+    (check-sat)
+    (get-objectives)
+    (get-model)
+    (exit)
+
+assert-soft:
+    if the expression is false, add weight n to total
+    (assert-soft (expression) :weight n :id total)
+    example:
+    (assert-soft (= x 0) :weight 1 :id total)
