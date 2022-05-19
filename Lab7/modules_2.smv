@@ -1,0 +1,14 @@
+MODULE point
+VAR
+    x: -10..10;
+    y: -10..10;
+MODULE circle
+VAR
+    center: point;
+    radius: 0..10;
+MODULE main
+    VAR c: circle;
+ASSIGN
+    init(c.center.x) := 0;
+    init(c.center.y) := 0;
+    init(c.radius) := 5;

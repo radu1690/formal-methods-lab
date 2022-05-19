@@ -1,0 +1,150 @@
+MODULE main
+VAR
+    wrong_missionaries : 0..3;
+    wrong_cannibals : 0..3;
+    correct_cannibals : 0..3;
+    correct_missionaries : 0..3;
+    boat : {wrong, correct};
+    choice : {nothing, missionarie, cannibal, two_missionaries, two_cannibals, both};
+
+INIT
+    wrong_missionaries = 3 & wrong_cannibals = 3 & correct_cannibals = 0 &
+    correct_missionaries = 0 & boat = wrong & choice = nothing;
+
+INVAR
+    (wrong_cannibals > wrong_missionaries) -> wrong_missionaries = 0;
+INVAR
+    (correct_cannibals > correct_missionaries) -> correct_missionaries = 0;
+
+-- ASSIGN
+--     next(choice) := case
+--         boat = wrong :case
+
+-- ASSIGN
+--     next(choice) := {nothing, missionarie, cannibal, two_missionaries, two_cannibals, both};
+
+
+-- CONDITIONS FOR 2 of the same type
+TRANS
+    boat = wrong & wrong_missionaries < 2 -> next(choice) != two_missionaries;
+
+TRANS
+    boat = wrong & wrong_cannibals < 2 -> next(choice) != two_cannibals;
+
+TRANS
+    boat = correct & correct_missionaries < 2 -> next(choice) != two_missionaries;
+
+TRANS
+    boat = correct & correct_cannibals < 2 -> next(choice) != two_cannibals;
+
+-- CONDITIONS FOR 1 of the same type
+
+TRANS
+    boat = wrong & wrong_missionaries < 1 -> next(choice) != missionarie;
+
+TRANS
+    boat = wrong & wrong_cannibals < 1 -> next(choice) != cannibal;
+
+TRANS
+    boat = correct & correct_missionaries < 1 -> next(choice) != missionarie;
+
+TRANS
+    boat = correct & correct_cannibals < 1 -> next(choice) != cannibal;
+
+-- CONDITIONS FOR 2 OF DIFFERENT TYPE
+
+TRANS
+    boat = wrong & wrong_missionaries < 1 & wrong_cannibals < 1 -> next(choice) != both;
+
+TRANS
+    boat = correct & correct_missionaries < 1  & correct_cannibals < 1 -> next(choice) != both;
+
+
+TRANS
+    next(choice) = nothing -> next(wrong_missionaries) = wrong_missionaries &
+                            next(wrong_cannibals) = wrong_cannibals &
+                            next(correct_missionaries) = correct_missionaries &
+                            next(correct_cannibals) = correct_cannibals &
+                            next(boat) = boat;
+
+-- FROM WRONG TO CORRECT
+TRANS
+    next(choice) = cannibal & boat = wrong -> next(wrong_missionaries) = wrong_missionaries &
+                            next(wrong_cannibals) = wrong_cannibals - 1 &
+                            next(correct_missionaries) = correct_missionaries &
+                            next(correct_cannibals) = correct_cannibals + 1 &
+                            next(boat) = correct;
+
+TRANS
+    next(choice) = missionarie & boat = wrong -> next(wrong_missionaries) = wrong_missionaries - 1 &
+                            next(wrong_cannibals) = wrong_cannibals &
+                            next(correct_missionaries) = correct_missionaries + 1 &
+                            next(correct_cannibals) = correct_cannibals &
+                            next(boat) = correct;
+
+TRANS
+    next(choice) = two_cannibals & boat = wrong -> next(wrong_missionaries) = wrong_missionaries &
+                            next(wrong_cannibals) = wrong_cannibals - 2 &
+                            next(correct_missionaries) = correct_missionaries &
+                            next(correct_cannibals) = correct_cannibals + 2 &
+                            next(boat) = correct;
+
+TRANS
+    next(choice) = two_missionaries & boat = wrong -> next(wrong_missionaries) = wrong_missionaries - 2 &
+                            next(wrong_cannibals) = wrong_cannibals &
+                            next(correct_missionaries) = correct_missionaries + 2 &
+                            next(correct_cannibals) = correct_cannibals &
+                            next(boat) = correct;
+
+TRANS
+    next(choice) = both & boat = wrong -> next(wrong_missionaries) = wrong_missionaries - 1 &
+                            next(wrong_cannibals) = wrong_cannibals - 1 &
+                            next(correct_missionaries) = correct_missionaries + 1 &
+                            next(correct_cannibals) = correct_cannibals + 1 &
+                            next(boat) = correct;
+
+
+-- FROM CORRECT TO WRONG
+
+TRANS
+    next(choice) = cannibal & boat = correct -> next(wrong_missionaries) = wrong_missionaries &
+                            next(wrong_cannibals) = wrong_cannibals + 1 &
+                            next(correct_missionaries) = correct_missionaries &
+                            next(correct_cannibals) = correct_cannibals - 1 &
+                            next(boat) = wrong;
+
+TRANS
+    next(choice) = missionarie & boat = correct -> next(wrong_missionaries) = wrong_missionaries + 1 &
+                            next(wrong_cannibals) = wrong_cannibals &
+                            next(correct_missionaries) = correct_missionaries - 1 &
+                            next(correct_cannibals) = correct_cannibals &
+                            next(boat) = wrong;
+
+TRANS
+    next(choice) = two_cannibals & boat = correct -> next(wrong_missionaries) = wrong_missionaries &
+                            next(wrong_cannibals) = wrong_cannibals + 2 &
+                            next(correct_missionaries) = correct_missionaries &
+                            next(correct_cannibals) = correct_cannibals - 2 &
+                            next(boat) = wrong;
+
+TRANS
+    next(choice) = two_missionaries & boat = correct -> next(wrong_missionaries) = wrong_missionaries + 2 &
+                            next(wrong_cannibals) = wrong_cannibals &
+                            next(correct_missionaries) = correct_missionaries - 2 &
+                            next(correct_cannibals) = correct_cannibals &
+                            next(boat) = wrong;
+
+TRANS
+    next(choice) = both & boat = correct -> next(wrong_missionaries) = wrong_missionaries + 1 &
+                            next(wrong_cannibals) = wrong_cannibals + 1 &
+                            next(correct_missionaries) = correct_missionaries - 1 &
+                            next(correct_cannibals) = correct_cannibals - 1 &
+                            next(boat) = wrong;
+
+FAIRNESS choice != nothing
+
+DEFINE
+  goal := correct_cannibals = 3 & correct_missionaries = 3;
+
+LTLSPEC
+  !F goal

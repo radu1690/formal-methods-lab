@@ -1,0 +1,1 @@
+file blocks.smv -> quando si controlla la soluzione, si guarda fino alla line "loop starts here"

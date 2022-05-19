@@ -1,0 +1,60 @@
+MODULE main
+
+VAR
+    A1 : array 0..2 of 1..10;
+    A2 : array 0..2 of 1..10;
+    res: array 0..2 of -100..100;
+    index : -1..2;
+    first : {sum, subtraction, multiplication};
+    second : {sum, subtraction, multiplication};
+    third : {sum, subtraction, multiplication};
+
+
+INIT 
+    index = -1 &
+    res[0] = 0 &
+    res[1] = 0 &
+    res[2] = 0 &
+    first = sum &
+    second = sum &
+    third = sum;
+    
+
+ASSIGN
+    next(A1) := A1;
+    next(A2) := A2;
+    next(index) := (index + 1) mod 3;
+    next(first) := case
+        next(index) !=0 : first;
+        next(index) = 0 : {sum, subtraction, multiplication};
+    esac;
+    next(second) := case
+        next(index) !=0 : second;
+        next(index) = 0 : {sum, subtraction, multiplication};
+    esac;
+    next(third) := case
+        next(index) !=0 : third;
+        next(index) = 0 : {sum, subtraction, multiplication};
+    esac;
+
+
+
+TRANS 
+    (next(index) = 0 & next(first) = sum) -> ((next(res[0]) = A1[0] + A2[0] & next(res[1]) = res[1]) & next(res[2]) = res[2]);
+TRANS
+    (next(index) = 0 & next(first) = subtraction)  -> (next(res[0]) = A1[0] - A2[0] & next(res[1]) = res[1]) & next(res[2]) = res[2];
+TRANS
+    (next(index) = 0 & next(first) = multiplication)  -> (next(res[0]) = A1[0] * A2[0] & next(res[1]) = res[1]) & next(res[2]) = res[2];
+TRANS
+    (next(index) = 1 & next(second) = sum)  -> (next(res[1]) = A1[1] + A2[1] & next(res[0]) = res[0]) & next(res[2]) = res[2];
+TRANS
+    (next(index) = 1 & next(second) = subtraction)  -> (next(res[1]) = A1[1] - A2[1] & next(res[0]) = res[0]) & next(res[2]) = res[2];
+TRANS
+    (next(index) = 1 & next(second) = multiplication)  -> (next(res[1]) = A1[1] * A2[1] & next(res[0]) = res[0]) & next(res[2]) = res[2];
+TRANS
+    (next(index) = 2 & next(third) = sum)  -> (next(res[2]) = A1[2] + A2[2] & next(res[1]) = res[1]) & next(res[0]) = res[0];
+TRANS
+    (next(index) = 2 & next(third) = subtraction)  -> (next(res[2]) = A1[2] - A2[2] & next(res[1]) = res[1]) & next(res[0]) = res[0];
+TRANS
+    (next(index) = 2 & next(third) = multiplication)  -> (next(res[2]) = A1[2] * A2[2] & next(res[1]) = res[1]) & next(res[0]) = res[0];
+

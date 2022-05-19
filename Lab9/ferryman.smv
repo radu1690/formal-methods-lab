@@ -1,0 +1,51 @@
+MODULE main
+VAR
+-- the man and the three items
+  cabbage : {right,left};
+  sheep   : {right,left};
+  wolf    : {right,left};
+  man     : {right,left};
+-- possible moves
+  move    : {c, s, w, e};
+
+DEFINE
+  carry_cabbage := move=c;
+  carry_sheep := move=s;
+  carry_wolf := move=w;
+  no_carry := move=e;
+
+-- TODO
+
+ASSIGN
+init(cabbage) := right;
+init(sheep) := right;
+init(wolf) := right;
+init(man) := right;
+init(move) := e;
+
+INVAR
+(sheep = wolf | sheep = cabbage) -> sheep = man;
+
+TRANS
+next(carry_cabbage) -> next(cabbage) != cabbage & next(wolf) = wolf & next(sheep) = sheep & next(man) != man;
+TRANS
+next(carry_wolf) -> next(cabbage) = cabbage & next(wolf) != wolf & next(sheep) = sheep & next(man) != man;
+TRANS
+next(carry_sheep) -> next(cabbage) = cabbage & next(wolf) = wolf & next(sheep) != sheep & next(man) != man;
+TRANS
+next(no_carry) -> next(cabbage) = cabbage & next(wolf) = wolf & next(sheep) = sheep & next(man) != man;
+
+TRANS
+next(man) != next(cabbage) -> next(move) != c;
+TRANS
+next(man) != next(sheep) -> next(move) != s;
+TRANS
+next(man) != next(wolf) -> next(move) != w;
+
+DEFINE
+  goal := cabbage = left & sheep = left & wolf = left;
+
+-- spec to find a solution to the problem
+
+LTLSPEC
+  !F goal

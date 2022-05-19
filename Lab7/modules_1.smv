@@ -1,0 +1,11 @@
+MODULE counter
+    VAR out: 0..9;
+ASSIGN 
+    next(out) := (out + 1) mod 10;
+
+
+MODULE main
+    VAR m1 : counter; m2 : counter;
+    sum: 0..18;
+ASSIGN 
+    sum := m1.out + m2.out;

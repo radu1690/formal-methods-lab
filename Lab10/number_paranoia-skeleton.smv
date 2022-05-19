@@ -1,0 +1,270 @@
+-- Numbers Paranoia Lite
+--table represented as:
+-- 0 1 2 3
+-- 4 5 6 7
+-- 8 9 10 11
+MODULE main
+VAR
+  -- when the last number is marked, it will loop on pos -1 and last number
+  pos : -1..11;
+  marked : array 0..11 of boolean;
+  -- TODO
+INIT
+  pos = 3 &
+  marked[0] = FALSE &
+  marked[1] = FALSE &
+  marked[2] = FALSE &
+  marked[3] = TRUE &
+  marked[4] = FALSE &
+  marked[5] = FALSE &
+  marked[6] = FALSE &
+  marked[7] = FALSE &
+  marked[8] = FALSE &
+  marked[9] = FALSE &
+  marked[10] = FALSE &
+  marked[11] = FALSE;
+
+ASSIGN
+  -- TODO
+  next(pos) := case
+    pos = 0 : {1,4};
+    pos = 1 : {0,2,5};
+    pos = 2 : {1,6,3};
+    pos = 3 : {2,7};
+    pos = 4 : {0,5,8};
+    pos = 5 : {1,4,6,9,-1};
+    pos = 6 : {2,5,7,10};
+    pos = 7 : {3,6,11};
+    pos = 8 : {4,9};
+    pos = 9 : {8,5,10};
+    pos = 10 : {9,6,11};
+    pos = 11: {10,7};
+    pos = -1 : 5;
+  esac;
+
+TRANS
+  next(pos) = 0 -> next(marked[0]) = TRUE &
+    next(marked[1]) = marked[1] &
+    next(marked[2]) = marked[2] &
+    next(marked[3]) = marked[3] &
+    next(marked[4]) = marked[4] &
+    next(marked[5]) = marked[5] &
+    next(marked[6]) = marked[6] &
+    next(marked[7]) = marked[7] &
+    next(marked[8]) = marked[8] &
+    next(marked[9]) = marked[9] &
+    next(marked[10]) = marked[10] &
+    next(marked[11]) = marked[11];
+
+TRANS
+  next(pos) = 1 -> next(marked[0]) = marked[0] &
+    next(marked[1]) = TRUE &
+    next(marked[2]) = marked[2] &
+    next(marked[3]) = marked[3] &
+    next(marked[4]) = marked[4] &
+    next(marked[5]) = marked[5] &
+    next(marked[6]) = marked[6] &
+    next(marked[7]) = marked[7] &
+    next(marked[8]) = marked[8] &
+    next(marked[9]) = marked[9] &
+    next(marked[10]) = marked[10] &
+    next(marked[11]) = marked[11];
+
+TRANS
+  next(pos) = 2 -> next(marked[0]) = marked[0] &
+    next(marked[1]) = marked[1] &
+    next(marked[2]) = TRUE &
+    next(marked[3]) = marked[3] &
+    next(marked[4]) = marked[4] &
+    next(marked[5]) = marked[5] &
+    next(marked[6]) = marked[6] &
+    next(marked[7]) = marked[7] &
+    next(marked[8]) = marked[8] &
+    next(marked[9]) = marked[9] &
+    next(marked[10]) = marked[10] &
+    next(marked[11]) = marked[11];
+
+TRANS
+  next(pos) = 3 -> next(marked[0]) = marked[0] &
+    next(marked[1]) = marked[1] &
+    next(marked[2]) = marked[2] &
+    next(marked[3]) = TRUE &
+    next(marked[4]) = marked[4] &
+    next(marked[5]) = marked[5] &
+    next(marked[6]) = marked[6] &
+    next(marked[7]) = marked[7] &
+    next(marked[8]) = marked[8] &
+    next(marked[9]) = marked[9] &
+    next(marked[10]) = marked[10] &
+    next(marked[11]) = marked[11];
+
+TRANS
+  next(pos) = 4 -> next(marked[0]) = marked[0] &
+    next(marked[1]) = marked[1] &
+    next(marked[2]) = marked[2] &
+    next(marked[3]) = marked[3] &
+    next(marked[4]) = TRUE &
+    next(marked[5]) = marked[5] &
+    next(marked[6]) = marked[6] &
+    next(marked[7]) = marked[7] &
+    next(marked[8]) = marked[8] &
+    next(marked[9]) = marked[9] &
+    next(marked[10]) = marked[10] &
+    next(marked[11]) = marked[11];
+
+TRANS
+  next(pos) = 5 -> next(marked[0]) = marked[0] &
+    next(marked[1]) = marked[1] &
+    next(marked[2]) = marked[2] &
+    next(marked[3]) = marked[3] &
+    next(marked[4]) = marked[4] &
+    next(marked[5]) = TRUE &
+    next(marked[6]) = marked[6] &
+    next(marked[7]) = marked[7] &
+    next(marked[8]) = marked[8] &
+    next(marked[9]) = marked[9] &
+    next(marked[10]) = marked[10] &
+    next(marked[11]) = marked[11];
+
+
+TRANS
+  next(pos) = 6 -> next(marked[0]) = marked[0] &
+    next(marked[1]) = marked[1] &
+    next(marked[2]) = marked[2] &
+    next(marked[3]) = marked[3] &
+    next(marked[4]) = marked[4] &
+    next(marked[5]) = marked[5] &
+    next(marked[6]) = TRUE &
+    next(marked[7]) = marked[7] &
+    next(marked[8]) = marked[8] &
+    next(marked[9]) = marked[9] &
+    next(marked[10]) = marked[10] &
+    next(marked[11]) = marked[11];
+
+
+TRANS
+  next(pos) = 7 -> next(marked[0]) = marked[0] &
+    next(marked[1]) = marked[1] &
+    next(marked[2]) = marked[2] &
+    next(marked[3]) = marked[3] &
+    next(marked[4]) = marked[4] &
+    next(marked[5]) = marked[5] &
+    next(marked[6]) = marked[6] &
+    next(marked[7]) = TRUE &
+    next(marked[8]) = marked[8] &
+    next(marked[9]) = marked[9] &
+    next(marked[10]) = marked[10] &
+    next(marked[11]) = marked[11];
+
+TRANS
+  next(pos) = 8 -> next(marked[0]) = marked[0] &
+    next(marked[1]) = marked[1] &
+    next(marked[2]) = marked[2] &
+    next(marked[3]) = marked[3] &
+    next(marked[4]) = marked[4] &
+    next(marked[5]) = marked[5] &
+    next(marked[6]) = marked[6] &
+    next(marked[7]) = marked[7] &
+    next(marked[8]) = TRUE &
+    next(marked[9]) = marked[9] &
+    next(marked[10]) = marked[10] &
+    next(marked[11]) = marked[11];
+
+TRANS
+  next(pos) = 9 -> next(marked[0]) = marked[0] &
+    next(marked[1]) = marked[1] &
+    next(marked[2]) = marked[2] &
+    next(marked[3]) = marked[3] &
+    next(marked[4]) = marked[4] &
+    next(marked[5]) = marked[5] &
+    next(marked[6]) = marked[6] &
+    next(marked[7]) = marked[7] &
+    next(marked[8]) = marked[8] &
+    next(marked[9]) = TRUE &
+    next(marked[10]) = marked[10] &
+    next(marked[11]) = marked[11];
+
+TRANS
+  next(pos) = 10 -> next(marked[0]) = marked[0] &
+    next(marked[1]) = marked[1] &
+    next(marked[2]) = marked[2] &
+    next(marked[3]) = marked[3] &
+    next(marked[4]) = marked[4] &
+    next(marked[5]) = marked[5] &
+    next(marked[6]) = marked[6] &
+    next(marked[7]) = marked[7] &
+    next(marked[8]) = marked[8] &
+    next(marked[9]) = marked[9] &
+    next(marked[10]) = TRUE &
+    next(marked[11]) = marked[11];
+
+TRANS
+  next(pos) = 11 -> next(marked[0]) = marked[0] &
+    next(marked[1]) = marked[1] &
+    next(marked[2]) = marked[2] &
+    next(marked[3]) = marked[3] &
+    next(marked[4]) = marked[4] &
+    next(marked[5]) = marked[5] &
+    next(marked[6]) = marked[6] &
+    next(marked[7]) = marked[7] &
+    next(marked[8]) = marked[8] &
+    next(marked[9]) = marked[9] &
+    next(marked[10]) = marked[10] &
+    next(marked[11]) = TRUE;
+
+TRANS
+  marked[0] = TRUE -> next(pos) != 0;
+TRANS
+  marked[1] = TRUE -> next(pos) != 1;
+
+TRANS
+  marked[2] = TRUE -> next(pos) != 2;
+
+TRANS
+  marked[3] = TRUE -> next(pos) != 3;
+
+TRANS
+  marked[4] = TRUE -> next(pos) != 4;
+
+-- TRANS
+--   marked[5] = TRUE -> next(pos) = 5;
+
+TRANS
+  marked[6] = TRUE -> next(pos) != 6;
+
+TRANS
+  marked[7] = TRUE -> next(pos) != 7;
+
+TRANS
+  marked[8] = TRUE -> next(pos) != 8;
+
+TRANS
+  marked[9] = TRUE -> next(pos) != 9;
+
+TRANS
+  marked[10] = TRUE -> next(pos) != 10;
+
+TRANS
+  marked[11] = TRUE -> next(pos) != 11;
+
+INVAR 
+  marked[5] -> (marked[0] &
+    marked[1] &
+    marked[2] &
+    marked[3] &
+    marked[4] &
+    marked[6] &
+    marked[7] &
+    marked[8] &
+    marked[9] &
+    marked[10] &
+    marked[11]);
+
+INVAR 
+  marked[2] -> (marked[3] & marked[4]);
+
+INVAR
+  marked[4] -> marked[3];
+
+
+LTLSPEC G (marked[5] = FALSE)

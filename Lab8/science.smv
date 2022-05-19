@@ -1,0 +1,45 @@
+MODULE main
+VAR
+    o : 0..100;
+    c : 0..100;
+    o2 : 0..100;
+    co : 0..100;
+    co2 : 0..100;
+    reaction : {none, r1, r2, r3, r4};
+
+ASSIGN
+    init(o) := 50;
+    init(c) := 50;
+    init(o2) := 0;
+    init(co) := 0;
+    init(co2) := 0;
+    init(reaction) := none;
+
+TRANS
+    next(o) < 2 -> next(reaction) != r1;
+
+TRANS
+    next(c) < 1 & next(o) < 1 -> next(reaction) != r2;
+
+TRANS
+    next(c) < 2 & next(o2) < 1 -> next(reaction) != r3;
+
+TRANS 
+    next(c) < 1 & next(o2) < 1 -> next(reaction) != r4;
+
+TRANS
+    next(reaction) = none -> next(o) = o & next(o2) = o2 & next(c) = c & next(co) = co & next(co2) = co2;
+
+TRANS
+    next(reaction) = r1 -> next(o) = o - 2 & next(o2) = o2 + 1 & next(c) = c & next(co) = co & next(co2) = co2;
+
+TRANS
+    next(reaction) = r2 -> next(o) = o - 1 & next(o2) = o2 & next(c) = c - 1 & next(co) = co + 1 & next(co2) = co2;
+
+TRANS
+    next(reaction) = r3 -> next(o) = o & next(o2) = o2 - 1 & next(c) = c - 2 & next(co) = co + 2 & next(co2) = co2;
+
+TRANS
+    next(reaction) = r4 -> next(o) = o & next(o2) = o2 - 1 & next(c) = c - 1 & next(co) = co & next(co2) = co2 + 1;
+
+LTLSPEC G (co2 != 3)

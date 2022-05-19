@@ -1,0 +1,7 @@
+MODULE main
+VAR
+    request : boolean; state : {ready,busy};
+INIT
+    state = ready
+TRANS
+    (state = ready & request) -> next(state) = busy
