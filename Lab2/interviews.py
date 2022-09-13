@@ -20,7 +20,7 @@ for i in range(0,4):
 var = {**day_company, **day_role}
 
 
-msat = Solver(name="msat")
+msat = Solver(name='msat')
 
 # The Alpha Plus interview is 2 days before the meeting for the copywriter position.
 msat.add_assertion(Or(And(var["dc0a"], var["dr2c"]), And(var["dc1a"], var["dr3c"])))

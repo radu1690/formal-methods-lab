@@ -1,0 +1,65 @@
+MODULE main
+VAR
+    move : {nothing, ten_to_seven, ten_to_three, seven_to_ten, seven_to_three, three_to_ten, three_to_seven};
+    ten: 0..10;
+    seven: 0..7;
+    three : 0..3;
+    steps: 0..100;
+
+INIT
+    move = nothing & ten = 10 & seven = 0 & three = 0 & steps = 0;
+
+-- TRANS 
+--     move = nothing -> next(move) != nothing;
+
+-- if one is empty, i can't take from it
+TRANS 
+    ten = 0 -> next(move) != ten_to_seven & next(move) != ten_to_three;
+TRANS 
+    seven = 0 -> next(move) != seven_to_ten & next(move) != seven_to_three;
+TRANS 
+    three = 0 -> next(move) != three_to_ten & next(move) != three_to_seven;
+
+-- if one is full, I can't put in it
+TRANS
+    ten = 10 -> next(move) != seven_to_ten & next(move) != three_to_ten;
+TRANS
+    seven = 7 -> next(move) != ten_to_seven | next(move) = three_to_seven;
+TRANS
+    three = 3 -> next(move) != ten_to_three & next(move) != seven_to_three;
+    
+-- encoding moves
+TRANS
+    next(move) = nothing -> next(ten) = ten & next(seven) = seven & next(three) = three;
+
+TRANS
+    next(move) = ten_to_seven -> next(ten) = ten - min(ten, 7 - seven) & next(seven) = seven + min(ten, 7 - seven) & next(three) = three;
+
+TRANS
+    next(move) = ten_to_three -> next(ten) = ten - min(ten, 3 - three) & next(seven) = seven & next(three) = three + min(ten, 3 - three);
+
+TRANS
+    next(move) = seven_to_ten -> next(ten) = ten + min(seven, 10 - ten) & next(seven) = seven - min(seven, 10 - ten) & next(three) = three;
+
+TRANS
+    next(move) = seven_to_three -> next(ten) = ten & next(seven) = seven - min(seven, 3 - three) & next(three) = three + min(seven, 3 - three);
+
+TRANS
+    next(move) = three_to_ten -> next(ten) = ten + min(three, 10 - ten) & next(seven) = seven & next(three) = three - min(three, 10 - ten);
+
+TRANS
+    next(move) = three_to_seven -> next(ten) = ten & next(seven) = seven + min(three, 7 - seven) & next(three) = three - min(three, 7 - seven);
+
+TRANS 
+    !goal -> next(steps) = steps + 1;
+TRANS
+    goal -> next(steps) = steps;
+
+TRANS
+    goal -> next(move) = nothing;
+
+DEFINE goal := ten = 5 & seven = 5 & three = 0;
+
+LTLSPEC !F goal;
+
+-- number of steps: 9

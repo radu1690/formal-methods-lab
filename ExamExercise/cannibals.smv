@@ -1,0 +1,100 @@
+MODULE main
+VAR 
+    wrong_cannibals : 0..3;
+    wrong_missionaries : 0..3;
+    correct_cannibals : 0..3;
+    correct_missionaries : 0..3;
+    boat : {correct, wrong};
+    move : {nothing, one_cannibal, one_missionarie, two_cannibals, tow_missionaries, both};
+
+INIT
+    wrong_cannibals = 3 & 
+    wrong_missionaries = 3 & 
+    boat = wrong & 
+    correct_cannibals = 0 &
+    correct_missionaries = 0 &
+    move = nothing;
+
+INVAR 
+    (wrong_cannibals > wrong_missionaries) -> wrong_missionaries = 0;
+INVAR 
+    (correct_cannibals > correct_missionaries) -> correct_missionaries = 0;
+
+-- condition for 2 travelers
+TRANS
+    boat = wrong & wrong_cannibals < 2 -> next(move) != two_cannibals;
+TRANS
+    boat = wrong & wrong_missionaries < 2 -> next(move) != tow_missionaries;
+
+TRANS
+    boat = correct & correct_cannibals < 2 -> next(move) != two_cannibals;
+TRANS
+    boat = correct & correct_missionaries < 2 -> next(move) != tow_missionaries;
+
+-- condition for 1 traveler
+TRANS
+    boat = wrong & wrong_cannibals < 1 -> next(move) != one_cannibal;
+TRANS
+    boat = wrong & wrong_missionaries < 1 -> next(move) != one_missionarie;
+TRANS
+    boat = correct & correct_cannibals < 1 -> next(move) != one_cannibal;
+TRANS
+    boat = correct & correct_missionaries < 1 -> next(move) != one_missionarie;
+
+-- condition for both
+TRANS
+    boat = wrong & (wrong_cannibals < 1 & wrong_missionaries < 1) -> next(move) != both;
+
+TRANS
+    boat = correct & (correct_cannibals < 1 & correct_missionaries < 1) -> next(move) != both;
+
+-- moves
+TRANS
+next(move) = nothing -> next(wrong_cannibals) = wrong_cannibals & next(wrong_missionaries) = wrong_missionaries &
+        next(correct_cannibals) = correct_cannibals & next(correct_missionaries) = correct_missionaries & next(boat) = boat; 
+
+-- from wrong with 2 cannibals
+TRANS
+next(move) = two_cannibals & boat = wrong -> next(wrong_cannibals) = wrong_cannibals - 2 & next(wrong_missionaries) = wrong_missionaries &
+        next(correct_cannibals) = correct_cannibals + 2 & next(correct_missionaries) = correct_missionaries & next(boat) = correct; 
+-- from wrong with 1 cannibal
+TRANS
+next(move) = one_cannibal & boat = wrong -> next(wrong_cannibals) = wrong_cannibals - 1 & next(wrong_missionaries) = wrong_missionaries &
+        next(correct_cannibals) = correct_cannibals + 1 & next(correct_missionaries) = correct_missionaries & next(boat) = correct; 
+--from wrong with 2 missionaries
+TRANS
+next(move) = tow_missionaries & boat = wrong -> next(wrong_cannibals) = wrong_cannibals & next(wrong_missionaries) = wrong_missionaries - 2 &
+        next(correct_cannibals) = correct_cannibals & next(correct_missionaries) = correct_missionaries + 2 & next(boat) = correct; 
+--from wrong with 1 missionaries
+TRANS
+next(move) = one_missionarie & boat = wrong -> next(wrong_cannibals) = wrong_cannibals & next(wrong_missionaries) = wrong_missionaries - 1 &
+        next(correct_cannibals) = correct_cannibals & next(correct_missionaries) = correct_missionaries + 1 & next(boat) = correct;
+--from wrong with both
+TRANS
+next(move) = both & boat = wrong -> next(wrong_cannibals) = wrong_cannibals - 1 & next(wrong_missionaries) = wrong_missionaries - 1 &
+        next(correct_cannibals) = correct_cannibals + 1 & next(correct_missionaries) = correct_missionaries + 1 & next(boat) = correct;
+
+ 
+-- from correct with 2 cannibals
+TRANS
+next(move) = two_cannibals & boat = correct -> next(wrong_cannibals) = wrong_cannibals + 2 & next(wrong_missionaries) = wrong_missionaries &
+        next(correct_cannibals) = correct_cannibals - 2 & next(correct_missionaries) = correct_missionaries & next(boat) = wrong; 
+-- from correct with 1 cannibal
+TRANS
+next(move) = one_cannibal & boat = correct -> next(wrong_cannibals) = wrong_cannibals + 1 & next(wrong_missionaries) = wrong_missionaries &
+        next(correct_cannibals) = correct_cannibals - 1 & next(correct_missionaries) = correct_missionaries & next(boat) = wrong; 
+--from correct with 2 missionaries
+TRANS
+next(move) = tow_missionaries & boat = correct -> next(wrong_cannibals) = wrong_cannibals & next(wrong_missionaries) = wrong_missionaries + 2 &
+        next(correct_cannibals) = correct_cannibals & next(correct_missionaries) = correct_missionaries - 2 & next(boat) = wrong; 
+--from correct with 1 missionaries
+TRANS
+next(move) = one_missionarie & boat = correct -> next(wrong_cannibals) = wrong_cannibals & next(wrong_missionaries) = wrong_missionaries + 1 &
+        next(correct_cannibals) = correct_cannibals & next(correct_missionaries) = correct_missionaries - 1 & next(boat) = wrong;
+
+--from correct with both
+TRANS
+next(move) = both & boat = correct -> next(wrong_cannibals) = wrong_cannibals + 1 & next(wrong_missionaries) = wrong_missionaries + 1 &
+        next(correct_cannibals) = correct_cannibals - 1 & next(correct_missionaries) = correct_missionaries - 1 & next(boat) = wrong;
+
+LTLSPEC !F (correct_cannibals = 3 & correct_missionaries = 3)

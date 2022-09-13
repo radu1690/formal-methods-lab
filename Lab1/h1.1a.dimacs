@@ -1,4 +1,4 @@
-c -x1 -> (x1 -> x2)
+c = -x1 -> (x1 -> x2)
 c = -x1 -> (-x1 or x2)
 c = x1 or -x1 or x2
 

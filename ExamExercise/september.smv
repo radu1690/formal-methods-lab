@@ -1,0 +1,71 @@
+MODULE main
+
+VAR 
+    move : {nothing, extern_clock, extern_anti, middle_clock, middle_anti, intern_clock, intern_anti};
+    internal_ring : 0..3;
+    middle_ring: 0..3;
+    external_ring: 0..3;
+
+DEFINE 
+    N := 4;
+
+ASSIGN
+    init(move) := nothing;
+    init(internal_ring) := 1;
+    init(middle_ring) := 2;
+    init(external_ring) := 3;
+
+-- decide next move
+TRANS
+    move = nothing -> next(move) != nothing;
+
+-- next move can't be opposite of previous one
+--external
+TRANS
+    move = extern_clock -> next(move) != nothing & next(move) != extern_anti;
+TRANS
+    move = extern_anti -> next(move) != nothing & next(move) != extern_clock;
+--middle
+TRANS
+    move = middle_clock -> next(move) != nothing & next(move) != middle_anti;
+TRANS
+    move = middle_anti -> next(move) != nothing & next(move) != middle_clock;
+--internal
+TRANS
+    move = intern_clock -> next(move) != nothing & next(move) != intern_anti;
+TRANS
+    move = intern_anti -> next(move) != nothing & next(move) != intern_clock;
+
+TRANS
+    next(move) = nothing -> next(external_ring) = external_ring & next(middle_ring) = middle_ring & next(internal_ring) = internal_ring;
+
+-- moving external ring
+TRANS
+    next(move) = extern_clock -> next(external_ring) = ((external_ring) + 1) mod N & next(middle_ring) = ((middle_ring) - 1 + N) mod N & next(internal_ring) = internal_ring;
+TRANS
+    next(move) = extern_anti -> next(external_ring) = ((external_ring) - 1 + N) mod N & next(middle_ring) = ((middle_ring) + 1) mod N & next(internal_ring) = internal_ring;
+-- moving internal ring
+TRANS
+    next(move) = intern_clock -> next(internal_ring) = ((internal_ring) + 1) mod N & next(middle_ring) = ((middle_ring) - 1 + N) mod N & next(external_ring) = external_ring;
+TRANS
+    next(move) = intern_anti -> next(internal_ring) = ((internal_ring) - 1 + N) mod N & next(middle_ring) = ((middle_ring) + 1) mod N & next(external_ring) = external_ring;
+-- moving middle ring
+TRANS
+    next(move) = middle_anti -> next(internal_ring) = ((internal_ring) + 1) mod N & next(middle_ring) = ((middle_ring) - 1 + N) mod N & next(external_ring) = ((external_ring) + 1) mod N;
+TRANS
+    next(move) = middle_clock -> next(internal_ring) = ((internal_ring) - 1 + N) mod N & next(middle_ring) = ((middle_ring) + 1) mod N & next(external_ring) = ((external_ring) - 1 + N) mod N;
+
+-- goal definition
+DEFINE
+    goal := middle_ring = 0 & external_ring = 0 & internal_ring = 0;
+
+-- LTL property
+LTLSPEC !F goal;
+
+-- SOLUTION FOUND:
+-- nothing (initial state) -> external anticlockwise -> internal clockwise -> middle clockwise -> middle clockwise
+
+-- TOTAL MOVES : 4 (excluding initial state)
+
+
+

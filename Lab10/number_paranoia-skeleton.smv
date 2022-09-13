@@ -267,4 +267,4 @@ INVAR
   marked[4] -> marked[3];
 
 
-LTLSPEC G (marked[5] = FALSE)
+LTLSPEC !F (marked[5] = TRUE)

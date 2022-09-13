@@ -1,0 +1,152 @@
+MODULE main
+VAR
+    p: array -2..8 of {brown, rock, green, grass};
+    rock_pos : 0..6;
+    move: {nothing, move_green, move_brown, jump_brown, jump_green};
+    steps : 0..100;
+
+INIT
+    p[0] = brown &
+    p[1] = brown &
+    p[2] = brown &
+    p[3] = rock &
+    p[4] = green &
+    p[5] = green &
+    p[6] = green &
+    p[7] = grass &
+    p[8] = grass &
+    p[-1] = grass &
+    p[-2] = grass &
+    steps = 0 &
+    rock_pos = 3 &
+    move = nothing;
+
+TRANS
+    p[rock_pos + 1] != green -> next(move) != move_green;
+TRANS
+    p[rock_pos + 2] != green -> next(move) != jump_green;
+TRANS
+    p[rock_pos - 1] != brown -> next(move) != move_brown;
+TRANS
+    p[rock_pos - 2] != brown -> next(move) != jump_brown;
+
+TRANS
+    next(move) = nothing -> 
+        next(p[0]) = p[0] &
+        next(p[1]) = p[1] &
+        next(p[2]) = p[2] &
+        next(p[3]) = p[3] &
+        next(p[4]) = p[4] &
+        next(p[5]) = p[5] &
+        next(p[6]) = p[6] &
+        next(p[7]) = p[7] &
+        next(p[8]) = p[8] &
+        next(p[-1]) = p[-1] &
+        next(p[-2]) = p[-2] &
+        next(rock_pos) = rock_pos;
+
+ASSIGN
+    next(p[-2]) := p[-2];
+    next(p[-1]) := p[-1];
+    next(p[7]) := p[7];
+    next(p[8]) := p[8];
+
+    next(p[0]) := case
+        rock_pos = 0 & next(move) = move_green : green;
+        rock_pos = 0 & next(move) = jump_green : green;
+        rock_pos = 1 & next(move) = move_brown : rock;
+        TRUE : p[0];
+    esac;
+
+    next(p[1]) := case
+        rock_pos = 1 & (next(move) = move_green | next(move) = jump_green) : green;
+        rock_pos = 1 & next(move) = move_brown : brown;
+        rock_pos = 2 & (next(move) = move_brown) : rock;
+        rock_pos = 3 & (next(move) = jump_brown) : rock;
+        rock_pos = 0 & next(move) = move_green : green;
+        TRUE : p[1];
+    esac;
+
+    next(p[2]) := case
+        rock_pos = 2 & (next(move) = move_green | next(move) = jump_green) : green;
+        rock_pos = 2 & (next(move) = move_brown | next(move) = jump_brown) : brown;
+        rock_pos = 3 & next(move) = move_brown : rock;
+        rock_pos = 4 & next(move) = jump_brown : rock;
+        rock_pos = 1 & next(move) = move_green : rock;
+        rock_pos = 0 & next(move) = jump_green : rock;
+        TRUE : p[2];
+    esac;
+
+    next(p[3]) := case
+        rock_pos = 3 & (next(move) = move_green | next(move) = jump_green) : green;
+        rock_pos = 3 & (next(move) = move_brown | next(move) = jump_brown) : brown;
+        rock_pos = 4 & next(move) = move_brown : rock;
+        rock_pos = 5 & next(move) = jump_brown : rock;
+        rock_pos = 2 & next(move) = move_green : rock;
+        rock_pos = 1 & next(move) = jump_green : rock;
+        TRUE : p[3];
+    esac;
+
+    next(p[4]) := case
+        rock_pos = 4 & (next(move) = move_green | next(move) = jump_green) : green;
+        rock_pos = 4 & (next(move) = move_brown | next(move) = jump_brown) : brown;
+        rock_pos = 5 & next(move) = move_brown : rock;
+        rock_pos = 6 & next(move) = jump_brown : rock;
+        rock_pos = 3 & next(move) = move_green : rock;
+        rock_pos = 2 & next(move) = jump_green : rock;
+        TRUE : p[4];
+    esac;
+
+    next(p[5]) := case
+        rock_pos = 5 & (next(move) = move_green | next(move) = jump_green) : green;
+        rock_pos = 5 & (next(move) = move_brown | next(move) = jump_brown) : brown;
+        rock_pos = 6 & next(move) = move_brown : rock;
+        rock_pos = 7 & next(move) = jump_brown : rock;
+        rock_pos = 4 & next(move) = move_green : rock;
+        rock_pos = 3 & next(move) = jump_green : rock;
+        TRUE : p[5];
+    esac;
+
+    next(p[6]) := case
+        rock_pos = 6 & (next(move) = move_green | next(move) = jump_green) : green;
+        rock_pos = 6 & (next(move) = move_brown | next(move) = jump_brown) : brown;
+        rock_pos = 7 & next(move) = move_brown : rock;
+        rock_pos = 8 & next(move) = jump_brown : rock;
+        rock_pos = 5 & next(move) = move_green : rock;
+        rock_pos = 4 & next(move) = jump_green : rock;
+        TRUE : p[6];
+    esac;
+
+    -- for some reason, need to add additional costraints even tho it can't go out of bounds
+    next(rock_pos) := case
+        next(move) = move_green & rock_pos + 1 > 6 : 6;
+        next(move) = move_green : rock_pos + 1;
+        next(move) = jump_green & rock_pos + 2 > 6 : 6;
+        next(move) = jump_green : rock_pos + 2;
+        next(move) = move_brown & rock_pos - 1 < 0 : 0;
+        next(move) = move_brown : rock_pos - 1;
+        next(move) = jump_brown & rock_pos - 2 < 0 : 0;
+        next(move) = jump_brown : rock_pos - 2;
+        TRUE : rock_pos;
+    esac;
+
+    next(steps) := case
+        next(move) = nothing : steps;
+        steps = 100 : 100;
+        TRUE : steps + 1;
+    esac;
+
+
+
+DEFINE 
+    goal := 
+        rock_pos = 3 &
+        p[0] = green &
+        p[1] = green &
+        p[2] = green &
+        p[3] = rock &
+        p[4] = brown &
+        p[5] = brown &
+        p[6] = brown ;
+
+LTLSPEC !F goal;

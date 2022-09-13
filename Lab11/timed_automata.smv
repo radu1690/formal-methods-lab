@@ -1,0 +1,21 @@
+@TIME_DOMAIN continuous
+MODULE main
+VAR
+    c : clock;
+    state : {l0, l1};
+
+ASSIGN
+    init(state) := l0;
+    init(c) := 0;
+
+INVAR
+    state = l0 -> c <= 5;
+INVAR
+    state = l1 -> c < 15; 
+
+TRANS
+    state = l0 -> (c >= 5 & next(state) = l1 & next(c) = 0);
+
+TRANS 
+    state = l1 -> (c > 3 & next(state) = l0 & next(c) = c);
+
